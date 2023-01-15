@@ -1,18 +1,19 @@
 {
   "name": "fasock",
   "version": "1.0.0",
-  "description": "Explore socket.io library with fastify",
+  "description": "Explore socket.io library",
   "main": "index.js",
   "scripts": {
     "start": "node dist",
-    "watch": "nodemon src"
+    "build": "tsc",
+    "watch": "nodemon src/index.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Gani-laboratory/fasock.git"
   },
   "keywords": [
-    "fastify",
+    "http",
     "socket.io",
     "nodejs",
     "nodejs",
@@ -24,5 +25,20 @@
   "bugs": {
     "url": "https://github.com/Gani-laboratory/fasock/issues"
   },
-  "homepage": "https://github.com/Gani-laboratory/fasock#readme"
+  "homepage": "https://github.com/Gani-laboratory/fasock#readme",
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "verbose": true,
+    "watch": "src"
+  },
+  "dependencies": {
+    "socket.io": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  }
 }
