@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import { GeneralEntity } from "database/general.entity";
+import { GeneralEntity } from "#database/general.entity";
 import { Column, Entity, BeforeInsert } from "typeorm";
 
 export interface IUserPayload extends Omit<UserEntity, "id" | "hashPW" | "created_at" | "updated_at"> {}

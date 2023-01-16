@@ -1,9 +1,9 @@
-import { Socket } from "socket.io";
 import fastify from "fastify";
-import { datasource } from "database";
-import routes from "router";
-import socketIO from "plugins/socket.io";
-import handler from "./handler";
+import { Socket } from "socket.io";
+import { datasource } from "#database";
+import routes from "#router";
+import handler from "#handler";
+import socketIO from "#plugins/socket.io";
 
 export default () => {
   const server = fastify({

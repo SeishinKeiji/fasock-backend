@@ -1,4 +1,4 @@
-import initialize from "server";
+import initialize from "#server";
 
 const user = {
   email: "test@s.c",

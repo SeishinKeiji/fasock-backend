@@ -1,5 +1,5 @@
-import { datasource } from "database";
 import { Repository } from "typeorm";
+import { datasource } from "#database";
 import { IUserData, IUserPayload, UserEntity } from "./user.entity";
 export class UserService {
   private UserRepository: Repository<UserEntity>;

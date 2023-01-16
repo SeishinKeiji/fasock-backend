@@ -1,3 +1,3 @@
-import { UserController } from "~/modules/user";
+import { UserController } from "#modules/user";
 
 export default [UserController];
