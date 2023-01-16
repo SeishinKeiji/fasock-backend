@@ -1,7 +1,9 @@
 import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
 
+export interface IUser extends Omit<UserEntity, "id"> {}
+
 @Entity({ name: "users" })
-export class UserRepository {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
