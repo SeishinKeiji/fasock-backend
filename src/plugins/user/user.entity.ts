@@ -1,4 +1,5 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import * as bcrypt from "bcrypt";
+import { PrimaryGeneratedColumn, Column, Entity, BeforeInsert } from "typeorm";
 
 export interface IUser extends Omit<UserEntity, "id"> {}
 
@@ -15,4 +16,9 @@ export class UserEntity {
 
   @Column()
   password!: string;
+
+  @BeforeInsert()
+  async hashPW() {
+    this.password = await bcrypt.hash(this.password, await bcrypt.genSalt());
+  }
 }

@@ -4,6 +4,8 @@
   "description": "Explore socket.io library with fastify",
   "main": "index.js",
   "scripts": {
+    "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/@jorgebodega/typeorm-seeding/dist/cli.js seed -d src/database/datasource.ts src/database/seeder.ts",
+    "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop -d ./src/database/datasource.ts",
     "start": "node dist",
     "build": "tsc",
     "watch": "nodemon src/index.ts"
@@ -36,6 +38,7 @@
     "watch": "src"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",
     "fastify-plugin": "^4.5.0",
@@ -45,6 +48,8 @@
     "typeorm": "^0.3.11"
   },
   "devDependencies": {
+    "@jorgebodega/typeorm-seeding": "^6.0.1",
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^18.11.18",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
