@@ -1,1 +1,1 @@
-## Let's learning server-side websocket using socket.io and fastify!
+## FaSock server-side built with fastify and socket.io
