@@ -1,5 +1,5 @@
 import { FastifyPluginCallback } from "fastify";
-import { IUser } from "./user.entity";
+import { IUserPayload } from "./user.entity";
 import { UserService } from "./user.service";
 
 interface IQueryID {
@@ -16,19 +16,19 @@ export const UserController: FastifyPluginCallback = (server, opts, next) => {
     res.send({ data: service.getUser(req.query.id) });
   });
 
-  server.post<{ Body: IUser }>("/user", async (req, res) => {
+  server.post<{ Body: IUserPayload }>("/user", async (req, res) => {
     const data = await service.create(req.body);
-    res.send({ data });
+    res.status(201).send({ data });
   });
 
-  server.put<{ Body: IUser; Querystring: IQueryID }>("/user", async (req, res) => {
+  server.put<{ Body: IUserPayload; Querystring: IQueryID }>("/user", async (req, res) => {
     const updatedData = await service.update(req.query.id, req.body);
     res.send(updatedData);
   });
 
   server.delete<{ Querystring: IQueryID }>("/user", async (req, res) => {
     await service.delete(req.query.id);
-    res.send({ status: "ok", message: "user successfuly deleted" });
+    res.send({ message: "user successfuly deleted" });
   });
 
   next();

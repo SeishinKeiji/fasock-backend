@@ -1,13 +1,12 @@
 import * as bcrypt from "bcrypt";
-import { PrimaryGeneratedColumn, Column, Entity, BeforeInsert } from "typeorm";
+import { GeneralEntity } from "database/general.entity";
+import { Column, Entity, BeforeInsert } from "typeorm";
 
-export interface IUser extends Omit<UserEntity, "id"> {}
+export interface IUserPayload extends Omit<UserEntity, "id" | "hashPW" | "created_at" | "updated_at"> {}
+export interface IUserData extends Omit<UserEntity, "hashPW"> {}
 
 @Entity({ name: "users" })
-export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
+export class UserEntity extends GeneralEntity {
   @Column()
   email!: string;
 
