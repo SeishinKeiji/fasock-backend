@@ -9,11 +9,11 @@ interface IQueryID {
 export const UserController: FastifyPluginCallback = (server, opts, next) => {
   const service = new UserService();
   server.get("/users", async (_, res) => {
-    res.send({ data: await service.getUsers() });
+    return res.send({ data: await service.getUsers() });
   });
 
   server.get<{ Querystring: IQueryID }>("/user", async (req, res) => {
-    res.send({ data: await service.getUser(req.query.id) });
+    return res.send({ data: await service.getUser(req.query.id) });
   });
 
   server.post<{ Body: IUserPayload }>("/user", async (req, res) => {
@@ -23,12 +23,12 @@ export const UserController: FastifyPluginCallback = (server, opts, next) => {
 
   server.put<{ Body: IUserPayload; Querystring: IQueryID }>("/user", async (req, res) => {
     const updatedData = await service.update(req.query.id, req.body);
-    res.send(updatedData);
+    return res.send(updatedData);
   });
 
   server.delete<{ Querystring: IQueryID }>("/user", async (req, res) => {
     await service.delete(req.query.id);
-    res.send({ message: "user successfuly deleted" });
+    return res.send({ message: "user successfuly deleted" });
   });
 
   next();
