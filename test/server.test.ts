@@ -6,6 +6,17 @@ const user = {
   password: "secret0101",
 };
 
+const users = [user];
+
+const dbMock = {
+  User: {
+    find: jest.fn().mockReturnValue(users),
+    findOne: jest.fn().mockReturnValue(user),
+    save: jest.fn().mockReturnValue(user),
+    delete: jest.fn(),
+  },
+};
+
 describe("Server", () => {
   const server = initialize();
   beforeEach(async () => {
@@ -51,6 +62,7 @@ describe("Server", () => {
       },
       (err, res) => {
         expect(res.statusCode).toBe(200);
+        // expect(dbMock.User.find).toHaveBeenCalled();
         done(err);
       }
     );
@@ -63,11 +75,13 @@ describe("Server", () => {
         url: "/user",
         payload: {
           ...user,
+          id: 1,
           username: "updated",
         },
       },
       (err, res) => {
         expect(res.statusCode).toBe(200);
+        // expect(dbMock.User.findOne).toHaveBeenCalledWith(1);
         done(err);
       }
     );
@@ -84,6 +98,8 @@ describe("Server", () => {
       },
       (err, res) => {
         expect(res.statusCode).toBe(200);
+        // expect(dbMock.User.findOne).toHaveBeenCalledWith(1);
+        // expect(dbMock.User.delete).toHaveBeenCalledWith(1);
         done(err);
       }
     );

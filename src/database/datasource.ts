@@ -10,5 +10,5 @@ export const datasource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: true,
-  entities: [path.resolve(__dirname, "../plugins/**/*.entity.{js,ts}")],
+  entities: [path.resolve(__dirname, "../modules/**/*.entity.{js,ts}")],
 });
