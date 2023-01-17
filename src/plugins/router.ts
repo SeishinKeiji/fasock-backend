@@ -1,10 +1,11 @@
 import { FastifyInstance, FastifyPluginCallback } from "fastify";
-import { resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import fs from "node:fs/promises";
 
 async function load(app: FastifyInstance, dir: string) {
   dir = resolve(dir);
   const st = await fs.stat(dir);
+
   if (st.isDirectory()) {
     const files = await fs.readdir(dir);
     for (const file of files) {
@@ -17,7 +18,7 @@ async function load(app: FastifyInstance, dir: string) {
         const isController = file.split(".").find((file) => file === "controller");
         if (isController && ext === ("ts" || "js")) {
           const fl = require(fullPath);
-          app.register(fl.default, { prefix: "v1" });
+          app.register(fl.default, { prefix: basename(dirname(dir)) });
         }
       }
     }
