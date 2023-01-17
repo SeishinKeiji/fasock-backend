@@ -13,7 +13,7 @@ export const UserController: FastifyPluginCallback = (server, opts, next) => {
   });
 
   server.get<{ Querystring: IQueryID }>("/user", async (req, res) => {
-    res.send({ data: service.getUser(req.query.id) });
+    res.send({ data: await service.getUser(req.query.id) });
   });
 
   server.post<{ Body: IUserPayload }>("/user", async (req, res) => {
