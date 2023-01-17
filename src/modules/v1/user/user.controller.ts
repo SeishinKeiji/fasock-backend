@@ -6,30 +6,32 @@ interface IQueryID {
   id: number;
 }
 
-export const UserController: FastifyPluginCallback = (server, opts, next) => {
+const UserController: FastifyPluginCallback = (app, opts, next) => {
   const service = new UserService();
-  server.get("/users", async (_, res) => {
+  app.get("/users", async (_, res) => {
     return res.send({ data: await service.getUsers() });
   });
 
-  server.get<{ Querystring: IQueryID }>("/user", async (req, res) => {
+  app.get<{ Querystring: IQueryID }>("/user", async (req, res) => {
     return res.send({ data: await service.getUser(req.query.id) });
   });
 
-  server.post<{ Body: IUserPayload }>("/user", async (req, res) => {
+  app.post<{ Body: IUserPayload }>("/user", async (req, res) => {
     const data = await service.create(req.body);
     res.status(201).send({ data });
   });
 
-  server.put<{ Body: IUserPayload; Querystring: IQueryID }>("/user", async (req, res) => {
+  app.put<{ Body: IUserPayload; Querystring: IQueryID }>("/user", async (req, res) => {
     const updatedData = await service.update(req.query.id, req.body);
     return res.send(updatedData);
   });
 
-  server.delete<{ Querystring: IQueryID }>("/user", async (req, res) => {
+  app.delete<{ Querystring: IQueryID }>("/user", async (req, res) => {
     await service.delete(req.query.id);
     return res.send({ message: "user successfuly deleted" });
   });
 
   next();
 };
+
+export default UserController;

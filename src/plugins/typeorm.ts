@@ -1,10 +1,11 @@
 import fp from "fastify-plugin";
-import { FastifyPluginAsync } from "fastify";
+import { FastifyPluginCallback } from "fastify";
 import { datasource } from "#database";
 
-const typeorm: FastifyPluginAsync = async () => {
+const typeorm: FastifyPluginCallback = async (app, _, done) => {
   await datasource.initialize();
   console.log(datasource.isInitialized ? "connection was successfuly created" : "failed to connect database");
+  done();
 };
 
 export default fp(typeorm, {

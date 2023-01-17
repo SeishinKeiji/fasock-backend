@@ -17,7 +17,7 @@ describe("Server", () => {
     server.inject(
       {
         method: "POST",
-        url: "/user",
+        url: "/v1/user",
         payload: user,
       },
       (err, res) => {
@@ -31,7 +31,7 @@ describe("Server", () => {
     server.inject(
       {
         method: "GET",
-        url: "/user",
+        url: "/v1/user",
         query: {
           id: "1",
         },
@@ -47,7 +47,7 @@ describe("Server", () => {
     server.inject(
       {
         method: "GET",
-        url: "/users",
+        url: "/v1/users",
       },
       (err, res) => {
         expect(res.statusCode).toBe(200);
@@ -60,7 +60,7 @@ describe("Server", () => {
     server.inject(
       {
         method: "PUT",
-        url: "/user",
+        url: "/v1/user",
         payload: {
           ...user,
           id: 1,
@@ -78,7 +78,7 @@ describe("Server", () => {
     server.inject(
       {
         method: "DELETE",
-        url: "/user",
+        url: "/v1/user",
         query: {
           id: "1",
         },

@@ -1,6 +1,6 @@
 import fastify from "fastify";
 import { Socket } from "socket.io";
-import routes from "#router";
+import routes from "#plugins/router";
 import handler from "#handler";
 import socketIO from "#plugins/socket.io";
 import typeorm from "#plugins/typeorm";
@@ -22,9 +22,7 @@ export default () => {
     },
   });
   server.register(typeorm);
-  routes.map((route) => {
-    server.register(route);
-  });
+  server.register(routes);
 
   server.ready(async (error) => {
     if (error) console.log(error), process.exit(1);
