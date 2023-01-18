@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from "fastify";
 import { IUserPayload } from "./user.entity";
-import { userIdSchema, userData, userSchema } from "./user.schema";
+import { userIdSchema, userData, userSchema, userResponseData } from "./user.schema";
 import { UserService } from "./user.service";
 
 interface IQueryID {
@@ -13,9 +13,11 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app
   .addSchema(userData)
   .addSchema(userIdSchema)
+  .addSchema(userResponseData);
 
   app.get("/users", async (_, res) => {
-    return res.send({ data: await service.getUsers() });
+    const data = await service.getUsers()
+    return res.send({ data });
   });
 
   app.get<{ Querystring: IQueryID }>(
@@ -24,7 +26,8 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
       schema: userSchema.get,
     },
     async (req, res) => {
-      return res.send({ data: await service.getUser(req.query.id) });
+      const data = await service.getUser(req.query.id);
+      return res.send({ data });
     }
   );
 
@@ -46,7 +49,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
     },
     async (req, res) => {
       const updatedData = await service.update(req.query.id, req.body);
-      return res.send(updatedData);
+      return res.send({ data: updatedData });
     }
   );
 
