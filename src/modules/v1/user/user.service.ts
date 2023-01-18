@@ -16,16 +16,15 @@ export class UserService {
   }
 
   async create(user: IUserPayload): Promise<IUserData> {
+    user = this.UserRepository.create(user)
     return await this.UserRepository.save(user);
   }
 
   async update(id: number, data: Partial<IUserPayload>): Promise<IUserData> {
     let user = await this.UserRepository.findOne({ where: { id } });
     if (!user) throw new Error("User not found!");
-    return await this.UserRepository.save({
-      id,
-      ...data,
-    });
+    user = this.UserRepository.create({ id, ...data })
+    return await this.UserRepository.save(user);
   }
 
   async delete(id: number) {
