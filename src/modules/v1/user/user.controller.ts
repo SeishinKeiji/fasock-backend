@@ -16,8 +16,8 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   .addSchema(userResponseData);
 
   app.get("/users", async (_, res) => {
-    const data = await service.getUsers();
-    return res.send({ data: data.map(({password, ...user}) => user) });
+    const data = (await service.getUsers()).map(({password, ...user}) => user);
+    return res.send({ data });
   });
 
   app.get<{ Querystring: IQueryID }>(
