@@ -1,3 +1,25 @@
+import { FastifySchema } from "fastify";
+
+export const userSchema: Record<string, FastifySchema> = {
+  get: {
+    querystring: { $ref: "UserIdPayload#" },
+  },
+  post: {
+    body: {
+      $ref: "CreateUser#",
+    },
+  },
+  put: {
+    body: { $ref: "UpdateUser#" },
+    querystring: {
+      $ref: "UserIdPayload#",
+    },
+  },
+  delete: {
+    querystring: { $ref: "UserIdPayload#" },
+  },
+};
+
 export const createUserSchema = {
   $id: "CreateUser",
   $ref: "UserData#",
@@ -17,8 +39,8 @@ export const userData = {
   },
 };
 
-export const readUserSchema = {
-  $id: "ReadUser",
+export const userIdSchema = {
+  $id: "UserIdPayload",
   type: "object",
   additionalProperties: false,
   required: ["id"],
@@ -26,10 +48,12 @@ export const readUserSchema = {
     id: { type: "number" },
   },
 };
+
 export const updateUserSchema = {
   $ref: "UserData#",
   $id: "UpdateUser",
 };
+
 export const deleteUserSchema = {
   $id: "DeleteUser",
   type: "object",

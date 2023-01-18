@@ -1,6 +1,6 @@
 import { FastifyPluginCallback } from "fastify";
 import { IUserPayload } from "./user.entity";
-import { createUserSchema, deleteUserSchema, readUserSchema, updateUserSchema, userData } from "./user.schema";
+import { createUserSchema, deleteUserSchema, userIdSchema, updateUserSchema, userData, userSchema } from "./user.schema";
 import { UserService } from "./user.service";
 
 interface IQueryID {
@@ -10,7 +10,12 @@ interface IQueryID {
 const UserController: FastifyPluginCallback = (app, _, next) => {
   const service = new UserService();
 
-  app.addSchema(userData).addSchema(createUserSchema).addSchema(readUserSchema).addSchema(updateUserSchema).addSchema(deleteUserSchema);
+  app
+  .addSchema(userData)
+  .addSchema(userIdSchema)
+  .addSchema(createUserSchema)
+  .addSchema(updateUserSchema)
+  .addSchema(deleteUserSchema);
 
   app.get("/users", async (_, res) => {
     return res.send({ data: await service.getUsers() });
@@ -19,9 +24,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app.get<{ Querystring: IQueryID }>(
     "/user",
     {
-      schema: {
-        querystring: { $ref: "ReadUser#" },
-      },
+      schema: userSchema.get,
     },
     async (req, res) => {
       return res.send({ data: await service.getUser(req.query.id) });
@@ -31,11 +34,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app.post<{ Body: IUserPayload }>(
     "/user",
     {
-      schema: {
-        body: {
-          $ref: "CreateUser#",
-        },
-      },
+      schema: userSchema.post,
     },
     async (req, res) => {
       const data = await service.create(req.body);
@@ -46,12 +45,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app.put<{ Body: IUserPayload; Querystring: IQueryID }>(
     "/user",
     {
-      schema: {
-        body: { $ref: "UpdateUser#" },
-        querystring: {
-          $ref: "ReadUser#",
-        },
-      },
+      schema: userSchema.put,
     },
     async (req, res) => {
       const updatedData = await service.update(req.query.id, req.body);
@@ -62,9 +56,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app.delete<{ Querystring: IQueryID }>(
     "/user",
     {
-      schema: {
-        querystring: { $ref: "DeleteUser#" },
-      },
+      schema: userSchema.delete,
     },
     async (req, res) => {
       await service.delete(req.query.id);
