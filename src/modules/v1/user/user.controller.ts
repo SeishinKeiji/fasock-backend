@@ -10,13 +10,12 @@ interface IQueryID {
 const UserController: FastifyPluginCallback = (app, _, next) => {
   const service = new UserService();
 
-  app
-  .addSchema(userData)
-  .addSchema(userIdSchema)
-  .addSchema(userResponseData);
+  app.addSchema(userData);
+  app.addSchema(userIdSchema);
+  app.addSchema(userResponseData);
 
   app.get("/users", async (_, res) => {
-    const data = (await service.getUsers()).map(({password, ...user}) => user);
+    const data = (await service.getUsers()).map(({ password, ...user }) => user);
     return res.send({ data });
   });
 
@@ -27,6 +26,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
     },
     async (req, res) => {
       const data = await service.getUser(req.query.id);
+      if (!data) return res.status(400).send({ message: "cannot find the user, invalid id" });
       return res.send({ data });
     }
   );
@@ -38,7 +38,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
     },
     async (req, res) => {
       const data = await service.create(req.body);
-      res.status(201).send({ data });
+      return res.status(201).send({ data });
     }
   );
 
@@ -46,6 +46,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
     "/user",
     {
       schema: userSchema.put,
+      preHandler: app.auth([app.verifyToken]),
     },
     async (req, res) => {
       const updatedData = await service.update(req.query.id, req.body);
