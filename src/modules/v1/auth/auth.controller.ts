@@ -12,7 +12,7 @@ const AuthController: FastifyPluginCallback = (app, _, next) => {
     const user = await userService.findUser(req.body.email);
     if (!user) throw new Error("User not found");
     const token = jwt.sign({ id: user.id }, process.env.SECRET_KEY as string, { expiresIn: process.env.EXPIRES_IN });
-    res.send({ token });
+    res.send({ token, username: user.username });
   });
 
   next();

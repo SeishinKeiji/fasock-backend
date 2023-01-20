@@ -1,10 +1,11 @@
 import fastify from "fastify";
 import { Socket } from "socket.io";
 import routes from "#plugins/router";
-import handler from "#handler";
+import handler from "#modules/v1/chat/chat.handler";
 import socketIO from "#plugins/socket.io";
 import typeorm from "#plugins/typeorm";
 import verifyToken from "#plugins/auth";
+import cors from "@fastify/cors";
 
 export default () => {
   const server = fastify({
@@ -16,6 +17,9 @@ export default () => {
         },
       },
     },
+  });
+  server.register(cors, {
+    origin: "*",
   });
   server.register(socketIO, {
     cors: {
