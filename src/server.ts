@@ -36,8 +36,21 @@ export default () => {
   server.ready(async (error) => {
     if (error) console.log(error), process.exit(1);
     const onConnection = (socket: Socket) => {
+      socket.on("error", (err) => {
+        if (err && err.message === "unauthorized event") {
+          socket.disconnect();
+        }
+      });
       handler(server.io, socket);
     };
+    server.io.use((socket, next) => {
+      if (!socket.handshake.auth.user) {
+        return next(new Error("unauthorized event"));
+      }
+      socket.username = socket.handshake.auth.user.username;
+      // socket.token = socket.handshake.auth.user.token;
+      next();
+    });
     server.io.on("connection", onConnection);
   });
 

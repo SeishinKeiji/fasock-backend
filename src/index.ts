@@ -17,5 +17,12 @@ declare module "fastify" {
   }
 }
 
+declare module "socket.io" {
+  interface Socket {
+    username: string;
+    token: string;
+  }
+}
+
 const server = InitializeServer();
 server.listen({ port: (process.env.HOST_PORT as any) || 4040, host: process.env.HOST_NAME || "localhost" });

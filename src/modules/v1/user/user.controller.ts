@@ -14,15 +14,22 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
   app.addSchema(userIdSchema);
   app.addSchema(userResponseData);
 
-  app.get("/users", async (_, res) => {
-    const data = (await service.getUsers()).map(({ password, ...user }) => user);
-    return res.send({ data });
-  });
+  app.get(
+    "/users",
+    {
+      preHandler: app.auth([app.verifyToken]),
+    },
+    async (_, res) => {
+      const data = (await service.getUsers()).map(({ password, ...user }) => user);
+      return res.send({ data });
+    }
+  );
 
   app.get<{ Querystring: IQueryID }>(
     "/user",
     {
       schema: userSchema.get,
+      preHandler: app.auth([app.verifyToken]),
     },
     async (req, res) => {
       const data = await service.getUser(req.query.id);
@@ -58,6 +65,7 @@ const UserController: FastifyPluginCallback = (app, _, next) => {
     "/user",
     {
       schema: userSchema.delete,
+      preHandler: app.auth([app.verifyToken]),
     },
     async (req, res) => {
       await service.delete(req.query.id);
