@@ -6,6 +6,9 @@ import socketIO from "#plugins/socket.io";
 import typeorm from "#plugins/typeorm";
 import verifyToken from "#plugins/auth";
 import cors from "@fastify/cors";
+import { InMemorySessionStore, randomId } from "#utils";
+
+export const sessionStore = new InMemorySessionStore();
 
 export default () => {
   const server = fastify({
@@ -36,19 +39,30 @@ export default () => {
   server.ready(async (error) => {
     if (error) console.log(error), process.exit(1);
     const onConnection = (socket: Socket) => {
-      socket.on("error", (err) => {
-        if (err && err.message === "unauthorized event") {
-          socket.disconnect();
-        }
-      });
       handler(server.io, socket);
     };
     server.io.use((socket, next) => {
-      if (!socket.handshake.auth.user) {
-        return next(new Error("unauthorized event"));
+      const sessionID = socket.handshake.auth.sessionID;
+      if (sessionID) {
+        const session = sessionStore.findSession(sessionID);
+
+        if (session) {
+          socket.sessionID = sessionID;
+          socket.userID = session.userID;
+          socket.username = session.username;
+          return next();
+        } else {
+          const username = socket.handshake.auth.username;
+          if (!username) {
+            return next(new Error("invalid username"));
+          }
+
+          socket.sessionID = sessionID;
+          socket.userID = randomId();
+          socket.username = username;
+          return next();
+        }
       }
-      socket.username = socket.handshake.auth.user.username;
-      // socket.token = socket.handshake.auth.user.token;
       next();
     });
     server.io.on("connection", onConnection);

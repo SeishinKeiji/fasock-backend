@@ -4,7 +4,7 @@ import { datasource } from "#database";
 
 const typeorm: FastifyPluginCallback = async (app, _, done) => {
   await datasource.initialize();
-  console.log(datasource.isInitialized ? "connection was successfuly created" : "failed to connect database");
+  app.log.info(datasource.isInitialized ? "connection was successfuly created" : "failed to connect database");
   done();
 };
 

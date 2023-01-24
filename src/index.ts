@@ -21,6 +21,8 @@ declare module "socket.io" {
   interface Socket {
     username: string;
     token: string;
+    userID: string
+    sessionID: string
   }
 }
 
